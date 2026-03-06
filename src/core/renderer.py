@@ -122,18 +122,36 @@ def water_renderer(ax, water, g_proj, theme_dict):
         g_proj : Projected graph
         theme_dict : Theme dictionary
     """
-    water_polys = water[water.geometry.type.isin(["Polygon", "MultiPolygon"])]
-    if not water_polys.empty:
-        try:
-            water_polys = ox.projection.project_gdf(water_polys)
-        except Exception:
-            water_polys = water_polys.to_crs(g_proj.graph["crs"])
-        water_polys.plot(
-            ax=ax,
-            facecolor=theme_dict["water"],
-            edgecolor="none",
-            zorder=Z_ORDERS["water"],
-        )
+    # Project water features in the same CRS as the graph
+    water_proj = water.to_crs(g_proj.graph['crs'])
+
+    # Separate water polygons and island polygons
+    water_polys_all = water_proj[water_proj.geometry.type.isin(["Polygon", "MultiPolygon"])]
+    if not water_polys_all.empty:
+        # Filter out islands/islets that might be tagged with natural=coastline, These should be treated as land.
+        is_island = np.array([False] * len(water_polys_all))
+        if "place" in water_polys_all.columns:
+            is_island = np.array(water_polys_all["place"].isin(["island", "islet", "archipelago"]))
+        
+        water_polys = water_polys_all[~is_island]
+        island_polys = water_polys_all[is_island]
+        
+        if not water_polys.empty:
+            water_polys.plot(ax=ax, facecolor=theme_dict['water'], edgecolor='none', zorder=Z_ORDERS["water"])
+        
+        if not island_polys.empty:
+            # Plot islands with background color to ensure they aren't covered by ocean fill
+            island_polys.plot(ax=ax, facecolor=theme_dict['bg'], edgecolor='none', zorder=Z_ORDERS["island"])
+            
+    water_lines = water_proj[water_proj.geometry.type.isin(["LineString", "MultiLineString"])]
+    if not water_lines.empty:
+        lines_to_plot = water_lines
+        # If oceans are disabled, filter out coastline outlines
+        if "natural" in lines_to_plot.columns:
+            lines_to_plot = lines_to_plot[lines_to_plot["natural"] != "coastline"]
+        
+        if not lines_to_plot.empty:
+            lines_to_plot.plot(ax=ax, color=theme_dict['water'], linewidth=0.8, zorder=Z_ORDERS["water"])
         
 def parks_renderer(ax, parks, g_proj, theme_dict):
     """Render parks on the given plot with appropriate styling.

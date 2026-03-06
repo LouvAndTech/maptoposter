@@ -31,6 +31,7 @@ Z_ORDERS = {
     "water": 0.8,
     "parks": 0.5,
     "railways": 0.9,
+    "island": 1,
     "roads": 2,
     "text": 11,
 }
