@@ -1,5 +1,3 @@
-cache/*
-
 # Virtual environments
 env/
 .env/
@@ -36,3 +34,6 @@ htmlcov/
 
 #Generted posters
 posters/*
+
+# Caches
+cache/
