@@ -106,5 +106,11 @@ Examples:
         action="store_true",
         help="Exclude railway tracks from the map",
     )
+    parser.add_argument(
+        "--metric",
+        dest="metric",
+        action="store_true",
+        help="Use metric units for dimensions",
+    )
 
     return parser

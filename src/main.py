@@ -103,6 +103,11 @@ def main():
             print(f"✓ Coordinates: {lat}, {lon}")
         else:
             coords = get_coordinates(args.city, args.country)
+            
+        # Convert metrics to inches if needed (Yes, I don't like imperial units either, but it's what the original code uses for dimensions)
+        if args.metric:
+            args.width = args.width / 2.54  # Convert cm to inches
+            args.height = args.height / 2.54  # Convert cm to inches
 
         # Generate posters
         for theme_name in themes_to_generate:
