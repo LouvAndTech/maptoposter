@@ -1,4 +1,11 @@
-# City Map Poster Generator
+# Easy City Map Poster Generator
+
+> Based on the original work by **[Ankur](https://github.com/originalankur)**.  
+    Original Repository: **[maptoposter](https://github.com/originalankur/maptoposter)**  
+
+This project is a re-implementation of the original source code with a module oriented architecture, an optional GUI and minor improvements. 
+
+## Map to Poster
 
 Generate beautiful, minimalist map posters for any city in the world.
 
@@ -22,19 +29,6 @@ Generate beautiful, minimalist map posters for any city in the world.
 
 ## Installation
 
-### With uv (Recommended)
-
-Make sure [uv](https://docs.astral.sh/uv/) is installed. Running the script by prepending `uv run` automatically creates and manages a virtual environment.
-
-```bash
-# First run will automatically install dependencies
-uv run -m src --city "Paris" --country "France"
-
-# Or sync dependencies explicitly first (using locked versions)
-uv sync --locked
-uv run -m src --city "Paris" --country "France"
-```
-
 ### With pip + venv
 
 ```bash
@@ -43,17 +37,23 @@ source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
+If you plan to use the GUI version, you also need the additional dependencies 
+
+``` bash
+pip install -r requirements_gui.txt
+```
+
 ## Usage
 
 ### Generate Poster
 
-If you're using `uv`:
+#### Using the Gui :
 
 ```bash
-uv run -m src --city <city> --country <country> [options]
+python ./gui_launcher.py
 ```
 
-Otherwise (pip + venv):
+#### Using the command line :
 
 ```bash
 python -m src --city <city> --country <country> [options]
@@ -445,18 +445,6 @@ python -m src --city Paris --country France
 ```bash
 python __main__.py --city Paris --country France
 ```
-
-**With uv:**
-```bash
-uv run -m src --city Paris --country France
-```
-
-**Legacy (backward compatibility):**
-```bash
-python create_map_poster.py --city Paris --country France
-```
-
-The `__main__.py` wrapper in [src/__main__.py](src/__main__.py) ensures `python -m src` works correctly.
 
 ### OSM Highway Types → Road Hierarchy
 
