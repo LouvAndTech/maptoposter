@@ -5,6 +5,7 @@ import time
 from typing import Tuple
 
 from geopy.geocoders import Nominatim
+from ..callbacks import emit_progress, emit_status
 
 from .cache import CacheError, cache_get, cache_set
 
@@ -54,12 +55,15 @@ def get_coordinates(city: str, country: str) -> Tuple[float, float]:
             location = loop.run_until_complete(location)
 
     if not location:
+        emit_status(f"Could not find coordinates for {city}, {country}")
         raise ValueError(f"Could not find coordinates for {city}, {country}")
 
     addr = getattr(location, "address", None)
     if addr:
         print(f"✓ Found: {addr}")
+        emit_status(f"Found: {addr}")
     print(f"✓ Coordinates: {location.latitude}, {location.longitude}")
+    emit_status(f"✓ Coordinates: {location.latitude}, {location.longitude}")
 
     coords = (location.latitude, location.longitude)
     try:

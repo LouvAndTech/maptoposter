@@ -16,7 +16,7 @@ from PyQt6.QtGui import QFont
 from src.data import get_coordinates
 from src.theme import load_theme, get_available_themes
 from src.core import create_poster
-from src.core.callbacks import register_status_callback, register_progress_callback, clear_callbacks
+from src.callbacks import register_status_callback, register_progress_callback, clear_callbacks
 from src.fonts import load_fonts
 
 
@@ -83,8 +83,9 @@ class MainWindow(QMainWindow):
         # Output text
         self.output_text = QTextEdit()
         self.output_text.setReadOnly(True)
-        self.output_text.setMaximumHeight(150)
+        self.output_text.setMaximumHeight(300)
         main_layout.addWidget(QLabel("Output:"))
+        self.output_text.setFont(QFont("Courier New", 12))
         main_layout.addWidget(self.output_text)
         
         # Generate button
@@ -319,7 +320,6 @@ class MainWindow(QMainWindow):
             else:
                 self.log_output("Looking up coordinates...")
                 point = get_coordinates(city, country)
-                self.log_output(f"Found coordinates: {point}")
             
             # Prepare parameters
             output_file = self.output_path.text().strip()

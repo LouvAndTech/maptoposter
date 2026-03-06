@@ -5,6 +5,7 @@ import os
 from typing import Dict
 
 from src.config import FILE_ENCODING, THEMES_DIR
+from src.callbacks import emit_status
 
 
 def get_available_themes() -> list[str]:
@@ -33,17 +34,21 @@ def load_theme(theme_name: str = "terracotta") -> Dict[str, str]:
     theme_file = THEMES_DIR / f"{theme_name}.json"
 
     if not theme_file.exists():
+        emit_status(f"Theme '{theme_name}' not found. Using default 'terracotta'.")
         print(f"⚠ Theme '{theme_name}' not found. Using terracotta.")
         return _get_default_theme()
 
     try:
         with open(theme_file, "r", encoding=FILE_ENCODING) as f:
             theme = json.load(f)
+        emit_status(f"Loaded theme: {theme.get('name', theme_name)}")
         print(f"✓ Loaded theme: {theme.get('name', theme_name)}")
         if "description" in theme:
+            emit_status(theme["description"])
             print(f"  {theme['description']}")
         return theme
     except (OSError, json.JSONDecodeError) as e:
+        emit_status(f"Error loading theme: {e}. Using terracotta.")
         print(f"⚠ Error loading theme: {e}. Using terracotta.")
         return _get_default_theme()
 

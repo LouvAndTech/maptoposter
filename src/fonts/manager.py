@@ -7,6 +7,7 @@ from typing import Optional
 import requests
 
 from src.config import FILE_ENCODING, FONTS_DIR
+from src.callbacks import emit_status
 
 FONTS_CACHE_DIR = FONTS_DIR / "cache"
 
@@ -72,15 +73,18 @@ def download_google_font(
                 font_path = FONTS_CACHE_DIR / font_filename
 
                 if not font_path.exists():
+                    emit_status(f"Downloading {font_family} {weight_key}...")
                     print(f"  Downloading {font_family} {weight_key}...")
                     try:
                         font_response = requests.get(weight_url, timeout=10)
                         font_response.raise_for_status()
                         font_path.write_bytes(font_response.content)
                     except Exception as e:
+                        emit_status(f"Failed to download {font_family} {weight_key}: {e}")
                         print(f"  ⚠ Failed to download {weight_key}: {e}")
                         continue
                 else:
+                    emit_status(f"Using cached {font_family} {weight_key}")
                     print(f"  Using cached {font_family} {weight_key}")
 
                 font_files[weight_key] = str(font_path)
@@ -110,11 +114,14 @@ def load_fonts(font_family: Optional[str] = None) -> Optional[dict]:
         Dict with 'light', 'regular', 'bold' keys, or None if fails
     """
     if font_family and font_family.lower() != "roboto":
+        emit_status(f"Loading Google Font: {font_family}")
         print(f"Loading Google Font: {font_family}")
         fonts = download_google_font(font_family)
         if fonts:
+            emit_status(f"Font '{font_family}' loaded successfully")
             print(f"✓ Font '{font_family}' loaded successfully")
             return fonts
+        emit_status(f"Failed to load '{font_family}', falling back to Roboto")
         print(f"⚠ Failed to load '{font_family}', falling back to Roboto")
 
     fonts = {

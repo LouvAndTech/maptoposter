@@ -10,13 +10,13 @@ from matplotlib.textpath import TextPath
 from matplotlib.font_manager import FontProperties
 from tqdm import tqdm
 
-from src.config import POSTERS_DIR, DEFAULT_DISTANCE
-from src.data import fetch_features, fetch_graph, get_coordinates
-from src.fonts import load_fonts
+from src.config import POSTERS_DIR
+from src.data import fetch_features, fetch_graph
 from src.theme import load_theme
 from src.utils import Z_ORDERS, space_city_name
 from .renderer import create_gradient_fade, get_crop_limits, get_edge_colors_and_widths, parks_renderer, water_renderer, railways_renderer
-from .callbacks import emit_progress, emit_status
+from src.callbacks import emit_progress, emit_status
+
 
 
 def generate_output_filename(city: str, theme_name: str, output_format: str) -> str:
