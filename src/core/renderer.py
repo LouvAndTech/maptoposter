@@ -143,11 +143,11 @@ def water_renderer(ax, water, g_proj, theme_dict, crop_xlim, crop_ylim, include_
         island_polys = water_polys_all[is_island]
         
         if not water_polys.empty:
-            water_polys.plot(ax=ax, facecolor=theme_dict["water"], edgecolor='none', zorder=0.5)
-        
+            water_polys.plot(ax=ax, facecolor=theme_dict["water"], edgecolor='none', zorder=Z_ORDERS["water"])
+
         if not island_polys.empty:
             # Plot islands with background color to ensure they aren't covered by ocean fill
-            island_polys.plot(ax=ax, facecolor=theme_dict["bg"], edgecolor='none', zorder=0.6)
+            island_polys.plot(ax=ax, facecolor=theme_dict["bg"], edgecolor='none', zorder=Z_ORDERS["islands"])
 
     # Handle coastlines - try to form filled ocean polygons
     water_lines = water_proj[water_proj.geometry.type.isin(["LineString", "MultiLineString"])]
@@ -209,7 +209,7 @@ def water_renderer(ax, water, g_proj, theme_dict, crop_xlim, crop_ylim, include_
                                     is_water = True
                                 
                                 if is_water:
-                                    GeoSeries([poly]).plot(ax=ax, facecolor=theme_dict["water"], edgecolor='none', zorder=0.5)
+                                    GeoSeries([poly]).plot(ax=ax, facecolor=theme_dict["water"], edgecolor='none', zorder=Z_ORDERS["water"])
 
     if not water_lines.empty:
         lines_to_plot = water_lines
@@ -218,7 +218,7 @@ def water_renderer(ax, water, g_proj, theme_dict, crop_xlim, crop_ylim, include_
             lines_to_plot = lines_to_plot[lines_to_plot["natural"] != "coastline"]
         
         if not lines_to_plot.empty:
-            lines_to_plot.plot(ax=ax, color=theme_dict["water"], linewidth=0.8, zorder=0.5)
+            lines_to_plot.plot(ax=ax, color=theme_dict["water"], linewidth=0.8, zorder=Z_ORDERS["water"])
 
 
 def parks_renderer(ax, parks, g_proj, theme_dict):
